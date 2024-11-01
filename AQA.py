@@ -105,11 +105,11 @@ def process_pdfs_and_generate_embeddings(pdf_paths, output_json_path, corpus_dis
         passages = chunk_text(text)
         print(f"Chunked text into {len(passages)} passages")
 
-        # Create a document in the corpus
+        # start by making a document in the corpus (10k docs max)
         document_resource_name = create_document(corpus_resource_name, os.path.basename(pdf_path), {"source": pdf_path})
         print(f"Created document {document_resource_name}")
 
-        # Create chunks in the document
+        # make the chunks in the document (so it can be retreieved as chunks)
         created_chunks = create_chunks(document_resource_name, passages)
         print(f"Created {len(created_chunks)} chunks")
 
@@ -120,10 +120,11 @@ def process_pdfs_and_generate_embeddings(pdf_paths, output_json_path, corpus_dis
                 "text": chunk.data.string_value  #this is how you should access string_value
             })
     
-    # save the embeddings to a JSON file
+    # I'm saving the embeddings to a JSON file so you can see what's going on
+    # Note that this is not actually needed in any way, it's all in the cloud
     with open(output_json_path, 'w') as f:
         json.dump(embeddings, f, indent=4)
-    print(f"Saved embeddings to {output_json_path}")
+    print(f"Embeddings saved to {output_json_path}")
 
 if __name__ == "__main__":
     data_folder = "appp/static/data"
