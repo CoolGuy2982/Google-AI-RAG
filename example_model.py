@@ -93,7 +93,8 @@ def handle_user_query(corpus_resource_name, user_query, base64_image, results_co
         return None
 
     return answer_content
-#MAKE SURE YOU ARE SENDING IN THE RIGHT STUFF IF YOU ARE USING MY CODE!!!!!
+    
+# MAKE SURE YOU ARE SENDING IN THE RIGHT STUFF IF YOU ARE USING MY CODE!!!!!
 def generate_greenwashing_response(spoken_text, base64_image):
     text_prompt = f"""
     Answer based on the data based on user prompt: {spoken_text}
@@ -117,13 +118,13 @@ def generate_greenwashing_response(spoken_text, base64_image):
             return {'error': "Query response structure is unexpected."}
 
         try:
-            # Attempt to parse the response
+            # we try to parse the response
             text_analysis_result = json.loads(rag_response)
             response = text_analysis_result.get("Response", "No response generated.")
             keyword = text_analysis_result.get("Keyword", "Unknown")
             video_suggestion = text_analysis_result.get("Video_Suggestion")
         except json.JSONDecodeError:
-            # If JSON parsing fails, use Gemini 1.5 Flash model
+            # if JSON parsing fails, use 1.5 Flash model as a backup so the user still sees something
             print("Houston we have a problem.")
             model = genai.GenerativeModel(model_name='gemini-1.5-flash',
                                            generation_config={
@@ -135,7 +136,7 @@ def generate_greenwashing_response(spoken_text, base64_image):
                                             },
                                             safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
             alt_response = model.generate_content([text_prompt, base64_image])
-            # Parse the fallback model's JSON response
+            # we parse the fallback model's JSON response
             print(alt_response)
 
             fallback_result = alt_response.text
