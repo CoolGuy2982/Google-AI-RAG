@@ -1,0 +1,1 @@
+Helpful Python code to implement Google's AQA model to do retrieval augmented generation with a custom knowledge base. All that is required is a folder of PDFs, a Google Cloud Authenticated account with billing, and you must copy the corpus name/number to insert into the code you use to do RAG on the documents. 
